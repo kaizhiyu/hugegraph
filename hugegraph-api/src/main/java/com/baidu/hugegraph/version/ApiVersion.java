@@ -109,10 +109,11 @@ public final class ApiVersion {
      * [0.58] Issue-1173: Supports customized kout/kneighbor,
      *        multi-node-shortest-path, jaccard-similar and template-paths
      * [0.59] Issue-1333: Support graph read mode for olap property
+     * [0.60] Issue-1378: Add compact api for rocksdb/cassandra/hbase backend
      */
 
     // The second parameter of Version.of() is for IDE running without JAR
-    public static final Version VERSION = Version.of(ApiVersion.class, "0.59");
+    public static final Version VERSION = Version.of(ApiVersion.class, "0.60");
 
     public static final void check() {
         // Check version of hugegraph-core. Firstly do check from version 0.3
