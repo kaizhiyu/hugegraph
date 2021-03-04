@@ -51,6 +51,7 @@ import com.baidu.hugegraph.server.RestServer;
 import com.baidu.hugegraph.type.define.GraphMode;
 import com.baidu.hugegraph.type.define.GraphReadMode;
 import com.baidu.hugegraph.util.E;
+import com.baidu.hugegraph.util.JsonUtil;
 import com.baidu.hugegraph.util.Log;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.collect.ImmutableMap;
@@ -136,6 +137,20 @@ public class GraphsAPI extends API {
                       "Please take the message: %s", CONFIRM_CLEAR));
         }
         g.truncateBackend();
+    }
+
+    @PUT
+    @Timed
+    @Path("{name}/compact")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON_WITH_CHARSET)
+    @RolesAllowed({"admin"})
+    public String compact(@Context GraphManager manager,
+                          @PathParam("name") String name) {
+        LOG.debug("Manually compact graph '{}'", name);
+
+        HugeGraph g = graph(manager, name);
+        return JsonUtil.toJson(g.metadata(null, "compact"));
     }
 
     @PUT

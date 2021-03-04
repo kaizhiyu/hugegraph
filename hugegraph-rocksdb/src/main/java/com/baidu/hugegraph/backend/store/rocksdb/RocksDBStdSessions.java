@@ -315,6 +315,17 @@ public class RocksDBStdSessions extends RocksDBSessions {
     }
 
     @Override
+    public void compactRange() {
+        try {
+            // Waits while compaction is performed on the background threads
+            // rocksdb().flush(new FlushOptions())
+            rocksdb().compactRange();
+        } catch (RocksDBException e) {
+            throw new BackendException(e);
+        }
+    }
+
+    @Override
     public RocksDBSessions copy(HugeConfig config,
                                 String database, String store) {
         return new RocksDBStdSessions(config, database, store, this);
@@ -765,6 +776,16 @@ public class RocksDBStdSessions extends RocksDBSessions {
                 endKey = iter.key();
             }
             return Pair.of(startKey, endKey);
+        }
+
+        @Override
+        public void compactRange(String table) {
+            try (CFHandle cf = cf(table)) {
+                // Waits while compaction is performed on the background threads
+                rocksdb().compactRange(cf.get());
+            } catch (RocksDBException e) {
+                throw new BackendException(e);
+            }
         }
 
         /**
